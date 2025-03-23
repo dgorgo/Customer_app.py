@@ -17,15 +17,15 @@ if uploaded_file is not None:
     st.dataframe(sales_data.head())
     
     
-    if 'InvoiceDate' in sales_data.columns:
-        sales_data['InvoiceDate'] = pd.to_datetime(sales_data['InvoiceDate'])
+    if 'Delivered_date' in sales_data.columns:
+        sales_data['Delivered_date'] = pd.to_datetime(sales_data['Delivered_date'])
 
     sales_data.dropna(inplace=True)
     
     
     st.subheader("Market Basket Analysis")
-    if 'InvoiceNo' in sales_data.columns and 'StockCode' in sales_data.columns:
-        basket = sales_data.groupby(['InvoiceNo', 'StockCode'])['Quantity'].sum().unstack().fillna(0)
+    if 'Order_Id' in sales_data.columns and 'SKU_Code' in sales_data.columns:
+        basket = sales_data.groupby(['Order_Id', 'SKU_Code'])['Delivered Qty'].sum().unstack().fillna(0)
         basket = basket.applymap(lambda x: 1 if x > 0 else 0)
         
         frequent_itemsets = apriori(basket, min_support=0.02, use_colnames=True)
@@ -50,24 +50,24 @@ if uploaded_file is not None:
     
     
     st.subheader("Recommendation System using SVD")
-    if {'CustomerID', 'StockCode', 'Quantity'}.issubset(sales_data.columns):
-        reader = Reader(rating_scale=(1, sales_data['Quantity'].max()))
-        data = Dataset.load_from_df(sales_data[['CustomerID', 'StockCode', 'Quantity']], reader)
+    if {'Salesman_Code', 'SKU_Code', 'Delivered Qty'}.issubset(sales_data.columns):
+        reader = Reader(rating_scale=(1, sales_data['Delivered Qty'].max()))
+        data = Dataset.load_from_df(sales_data[['Salesman_Code', 'SKU_Code', 'Delivered Qty']], reader)
         trainset = data.build_full_trainset()
         
         model = SVD()
         cross_validate(model, data, cv=5)
         model.fit(trainset)
         
-        customer_id = st.number_input("Enter Customer ID for recommendations:", min_value=int(sales_data['CustomerID'].min()), max_value=int(sales_data['CustomerID'].max()))
+        customer_id = st.number_input("Enter Salesman Code for recommendations:", min_value=int(sales_data['CustomerID'].min()), max_value=int(sales_data['Salesman_Code'].max()))
         
         if st.button("Get Recommendations"):
-            product_ids = sales_data['StockCode'].unique()
+            product_ids = sales_data['SKU_Code'].unique()
             predictions = [model.predict(customer_id, pid).est for pid in product_ids]
-            recommendations = pd.DataFrame({'StockCode': product_ids, 'Predicted Rating': predictions})
+            recommendations = pd.DataFrame({'SKU_Code': product_ids, 'Predicted Rating': predictions})
             recommendations = recommendations.sort_values(by='Predicted Rating', ascending=False).head(10)
             
             st.write("Top 10 Recommended Products:")
             st.dataframe(recommendations)
     else:
-        st.error("Required columns 'CustomerID', 'StockCode', and 'Quantity' are missing in the dataset.")
+        st.error("Required columns 'Salesman_Code', 'SKU_Code', and 'Delivered Qty' are missing in the dataset.")
