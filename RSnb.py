@@ -91,13 +91,12 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "C:\\Users\\etietop.udofia\\AppData\\Local\\Temp\\ipykernel_27456\\3357326288.py:1: DtypeWarning: Columns (5) have mixed types. Specify dtype option on import or set low_memory=False.\n",
       "  sales_data = pd.read_csv('sales_data.csv')\n"
      ]
     }
    ],
    "source": [
-    "sales_data = pd.read_csv('sales_data.csv')"
+    "sales_data = pd.read_csv('sales_data.csv', dtype={'column_name': str})"
    ]
   },
   {
@@ -118,7 +117,7 @@
    "outputs": [],
    "source": [
     "if uploaded_file:\n",
-    "    sales_data = pd.read_csv('sales_data.csv')\n",
+    "    sales_data = pd.read_csv('sales_data.csv', dtype={'column_name': str})\n",
     "    st.write(\"Data Preview:\", sales_data.head())"
    ]
   },
@@ -142,7 +141,7 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "C:\\Users\\etietop.udofia\\AppData\\Local\\Temp\\ipykernel_27456\\1220929609.py:3: FutureWarning: DataFrame.applymap has been deprecated. Use DataFrame.map instead.\n",
+     
       "  basket = basket.applymap(lambda x: 1 if x > 0 else 0)  # Convert to 1/0\n"
      ]
     }
@@ -163,10 +162,7 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "C:\\Users\\etietop.udofia\\AppData\\Local\\anaconda3\\Lib\\site-packages\\mlxtend\\frequent_patterns\\fpcommon.py:161: DeprecationWarning: DataFrames with non-bool types result in worse computationalperformance and their support might be discontinued in the future.Please use a DataFrame with bool type\n",
-      "  warnings.warn(\n",
-      "2025-03-13 17:00:22.117 Serialization of dataframe to Arrow table was unsuccessful due to: (\"Could not convert frozenset({'10000001'}) with type frozenset: did not recognize Python value type when inferring an Arrow data type\", 'Conversion failed for column antecedents with type object'). Applying automatic fixes for column types to make the dataframe Arrow-compatible.\n"
-     ]
+      ]
     }
    ],
    "source": [
