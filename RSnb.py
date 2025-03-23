@@ -12,9 +12,12 @@ st.title("MBA AND RS")
 uploaded_file = st.file_uploader("sales_data.csv", type=["csv"])
 
 if uploaded_file is not None:
-    sales_data = pd.read_csv(uploaded_file)
-    st.write("Data Preview:")
-    st.dataframe(sales_data.head())
+    try:
+        sales_data = pd.read_csv(uploaded_file)
+        st.write("Data Preview:")
+        st.dataframe(sales_data.head())
+    except Exception as e:
+        st.error(f"Error reading the CSV file: {e}")
     
     
     if 'Delivered_date' in sales_data.columns:
@@ -46,7 +49,7 @@ if uploaded_file is not None:
         plt.title("Support vs. Confidence")
         st.pyplot(plt)
     else:
-        st.error("Required columns 'InvoiceNo' and 'StockCode' are missing in the dataset.")
+        st.error("Required columns 'Order_Id' and 'SKU_Code' are missing in the dataset.")
     
     
     st.subheader("Recommendation System using SVD")
@@ -59,7 +62,7 @@ if uploaded_file is not None:
         cross_validate(model, data, cv=5)
         model.fit(trainset)
         
-        customer_id = st.number_input("Enter Salesman Code for recommendations:", min_value=int(sales_data['CustomerID'].min()), max_value=int(sales_data['Salesman_Code'].max()))
+        salesman_code = st.number_input("Enter Salesman Code for recommendations:", min_value=int(sales_data['Salesman_Code'].min()), max_value=int(sales_data['Salesman_Code'].max()))
         
         if st.button("Get Recommendations"):
             product_ids = sales_data['SKU_Code'].unique()
