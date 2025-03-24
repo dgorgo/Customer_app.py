@@ -1,9 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from mlxtend.frequent_patterns import apriori, association_rules
-from surprise import Dataset, Reader, SVD
-from surprise.model_selection import cross_validate
+
 
 st.title("MBA AND RS")
 
